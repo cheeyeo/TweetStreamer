@@ -42,8 +42,12 @@ defmodule TwitterPlayground do
     end
   end
 
-  def track(query) do
-    TweetStreamer.Server.filter({:global, query}, query)
+  # def track(query) do
+  #   TweetStreamer.Server.filter({:global, query}, query)
+  # end
+
+  def track(query, socket_ref, orig_pid) do
+    TweetStreamer.Server.filter({:global, query}, query, socket_ref, orig_pid)
   end
 
   # Tell Phoenix to update the endpoint configuration

@@ -81,3 +81,8 @@ http://stackoverflow.com/questions/32085258/how-to-run-some-code-every-few-hours
 http://stackoverflow.com/questions/37391528/how-to-use-phoenix-channel-reply-2-for-async-reply-to-channel-push
 
 https://github.com/phoenixframework/phoenix/blob/master/lib/phoenix/channel.ex
+
+https://github.com/BlackrockDigital/startbootstrap-simple-sidebar
+
+
+https://getbootstrap.com/examples/dashboard/

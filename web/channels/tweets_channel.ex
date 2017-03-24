@@ -3,13 +3,17 @@ defmodule TwitterPlayground.TweetsChannel do
 
   def join("tweets:"<>query, _params, socket) do
     {:ok, _pid} = TwitterPlayground.start_streamer(query)
-    send(self(), :track_query)
     {:ok, %{status: "successful"}, socket}
   end
 
-  # handle_info means its internal call
-  def handle_info(:track_query, socket) do
-    TwitterPlayground.track(counter_id(socket.topic))
+  def handle_in("track", %{"query" => query}, socket) do
+    IO.puts "QUERY: #{query}"
+    TwitterPlayground.track(counter_id(socket.topic), socket_ref(socket), self())
+    {:noreply, socket}
+  end
+
+  def handle_info({:tweet_received, tweet, ref}, socket) do
+    reply ref, {:ok, %{tweet: tweet}}
     {:noreply, socket}
   end
 

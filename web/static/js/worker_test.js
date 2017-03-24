@@ -17,7 +17,7 @@ channel.push("work", {body: "YOLO"})
     console.log("Received OK from worker with payload: ", msg)
   });
 
-// if we are to the reply/2 function in channel
+// if we are to use the reply/2 function in channel
 // we need to listen to 'phx_reply'
 channel.on("phx_reply", (data) => {
   //console.log("DATA ", data);
