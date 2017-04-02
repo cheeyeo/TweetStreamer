@@ -24,3 +24,8 @@ erl_crash.dump
 /config/prod.secret.exs
 
 .env
+
+*.old
+CODE_BACKUP.ex
+NOTES.md
+TODO.md

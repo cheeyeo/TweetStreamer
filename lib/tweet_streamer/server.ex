@@ -1,31 +1,51 @@
 defmodule TweetStreamer.Server do
   use GenServer
+  require Logger
 
   # Public API
   def start_link do
-    GenServer.start_link(__MODULE__, [])
+    GenServer.start_link(__MODULE__, [], name: :tweetstreamer_server)
   end
 
-  def filter(pid, query, socket_ref, orig_pid) do
-    GenServer.cast(pid, {:stream_filter, query, socket_ref, orig_pid})
+  def add(query) do
+    Logger.info "QUERY: #{query}"
+    GenServer.cast(:tweetstreamer_server, {:add, query})
   end
 
-  def handle_cast({:stream_filter, query, socket_ref, orig_pid}, _state) do
-    start(query, socket_ref, orig_pid)
-    {:noreply, query}
+  def remove(query) do
+    GenServer.cast(:tweetstreamer_server, {:remove, query})
   end
 
-  defp start(query, socket_ref, orig_pid) do
-    stream = ExTwitter.stream_filter(track: query, timeout: 5000)
-    Phoenix.Channel.reply socket_ref, {:ok, %{msg: "Starting tracking on term: #{query}"}}
+  def get_queries do
+    GenServer.call(:tweetstreamer_server, {:queries})
+  end
 
-    for tweet <- stream do
-      # IO.puts "Tweet: #{inspect(tweet, pretty: true, limit: 2_000)}"
-      send orig_pid, {:tweet_received, tweet, socket_ref}
+  # Create new MapSet
+  def clear do
+    GenServer.cast(:tweetstreamer_server, {:clear})
+  end
 
-      # Phoenix.Channel.reply socket, {:ok, %{tweet: tweet}}
-      # broadcasts directly to Javascript channel
-      # TwitterPlayground.Endpoint.broadcast!("tweets:"<>query, "tweet", %{tweet: tweet})
-    end
+  # Server API
+  def init(_) do
+    {:ok, MapSet.new}
+  end
+
+  def handle_cast({:add, query}, state) do
+    new_set = MapSet.put(state, query)
+    {:noreply, new_set}
+  end
+
+  def handle_cast({:remove, query}, state) do
+    new_set = MapSet.delete(state, query)
+    {:noreply, new_set}
+  end
+
+  def handle_cast({:clear}, _state) do
+    {:noreply, MapSet.new}
+  end
+
+  def handle_call({:queries}, _from, state) do
+    list = MapSet.to_list(state)
+    {:reply, list, state}
   end
 end

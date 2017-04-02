@@ -1,20 +1,20 @@
 defmodule TweetStreamer.Supervisor do
   use Supervisor
-  @name TweetSupervisor
+  @name TweetStreamerSupervisor
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: @name)
   end
 
-  def start_streamer do
+  def start_server do
     Supervisor.start_child(@name, [])
   end
 
   def init(_) do
     children = [
-      worker(TweetStreamer.Server, [], restart: :transient)
+      worker(TweetStreamer.Server, [])
     ]
 
-    supervise(children, strategy: :simple_one_for_one)
+    supervise(children, strategy: :one_for_one)
   end
 end

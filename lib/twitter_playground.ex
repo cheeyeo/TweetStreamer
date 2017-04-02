@@ -6,14 +6,6 @@ defmodule TwitterPlayground do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    ExTwitter.configure(
-      consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
-      consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
-      access_token: System.get_env("TWITTER_ACCESS_TOKEN"),
-      access_token_secret: System.get_env("TWITTER_ACCESS_SECRET")
-    )
-
-
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
@@ -22,7 +14,9 @@ defmodule TwitterPlayground do
       supervisor(TwitterPlayground.Endpoint, []),
       # Start your own worker by calling: TwitterPlayground.Worker.start_link(arg1, arg2, arg3)
       # worker(TwitterPlayground.Worker, [arg1, arg2, arg3]),
-      supervisor(TweetStreamer.Supervisor, [])
+      supervisor(TweetStreamer.Supervisor, []),
+      supervisor(TweetStreamer.TwitterClientSupervisor, []),
+      supervisor(Registry, [:unique, :extwitter_process])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -31,23 +25,16 @@ defmodule TwitterPlayground do
     Supervisor.start_link(children, opts)
   end
 
-  def start_streamer(query) do
-    case :global.whereis_name(query) do
-      :undefined ->
-        {:ok, pid} = TweetStreamer.Supervisor.start_streamer
-        :yes = :global.register_name(query, pid)
-        {:ok, pid}
-      pid ->
-        {:ok, pid}
-    end
+  def track(query) do
+    TweetStreamer.Server.add(query)
   end
 
-  # def track(query) do
-  #   TweetStreamer.Server.filter({:global, query}, query)
-  # end
+  def untrack(query) do
+    TweetStreamer.Server.remove(query)
+  end
 
-  def track(query, socket_ref, orig_pid) do
-    TweetStreamer.Server.filter({:global, query}, query, socket_ref, orig_pid)
+  def start_tracker() do
+    TweetStreamer.TwitterClientSupervisor.start_tracker()
   end
 
   # Tell Phoenix to update the endpoint configuration

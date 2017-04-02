@@ -25,4 +25,20 @@ import "phoenix_html"
 
 // Below is the twitter streamer
 // a hardcoded query for 'apples' is set for now; still WIP
-import "./twitter"
+// import "./twitter"
+
+import TwitterClient from "./twitter_client"
+
+let searchInput = document.getElementById("search-input");
+
+searchInput.addEventListener("search", event => {
+  console.log("inside search");
+  console.log(searchInput.value);
+
+  if(searchInput.value != ""){
+    new TwitterClient(searchInput.value).doSearch();
+  }
+}, false);
+
+
+
