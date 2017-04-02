@@ -16,6 +16,9 @@ defmodule TwitterPlayground do
       # worker(TwitterPlayground.Worker, [arg1, arg2, arg3]),
       supervisor(TweetStreamer.Supervisor, []),
       supervisor(TweetStreamer.TwitterClientSupervisor, []),
+      worker(TweetStreamer.Queue, []),
+      worker(TweetStreamer.TwitterFilter, []),
+      worker(TweetStreamer.TwitterConsumer, []),
       supervisor(Registry, [:unique, :extwitter_process])
     ]
 
