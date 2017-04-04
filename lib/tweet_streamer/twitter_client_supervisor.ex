@@ -8,7 +8,6 @@ defmodule TweetStreamer.TwitterClientSupervisor do
   end
 
   def start_tracker() do
-    stop_tracker()
     Supervisor.start_child(@name, [])
     Logger.debug "COUNT: #{inspect(Supervisor.count_children(@name))} #{inspect(Supervisor.which_children(@name))}"
   end

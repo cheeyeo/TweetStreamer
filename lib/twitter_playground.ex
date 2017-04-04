@@ -40,6 +40,10 @@ defmodule TwitterPlayground do
     TweetStreamer.TwitterClientSupervisor.start_tracker()
   end
 
+  def stop_tracker() do
+    TweetStreamer.TwitterClientSupervisor.stop_tracker()
+  end
+
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do

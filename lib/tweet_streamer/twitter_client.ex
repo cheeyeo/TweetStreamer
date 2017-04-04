@@ -15,11 +15,6 @@ defmodule TweetStreamer.TwitterClient do
       # match tweet to filter keyword
 
       Queue.put_in({terms, tweet})
-
-      # Enum.each(terms, fn(channel) ->
-      #   Logger.info "channel: #{inspect(channel)}"
-      #   TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: tweet})
-      # end)
     end)
   end
 end

@@ -11,12 +11,16 @@ defmodule TweetStreamer.TwitterConsumer do
   end
 
   def handle_events(events, _from, state) do
-    events |> Enum.map(&print_events/1)
+    [{_terms, tweets}] = events
+    tweets |> Enum.each(&print_events/1)
     # As a consumer we never emit events
     {:noreply, [], state}
   end
 
   def print_events(event) do
-    IO.inspect "INSIDE CONSUMER: #{inspect(event)}"
+    IO.puts "INSIDE CONSUMER print_events: #{inspect(event)}"
+    channel = event[:term]
+    tweet = event[:tweet]
+    TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: tweet})
   end
 end

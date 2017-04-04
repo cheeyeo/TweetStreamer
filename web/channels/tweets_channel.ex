@@ -7,6 +7,7 @@ defmodule TwitterPlayground.TweetsChannel do
 
   def handle_in("track", %{"query" => query}, socket) do
     TwitterPlayground.track(query)
+    TwitterPlayground.stop_tracker()
     TwitterPlayground.start_tracker()
     {:noreply, socket}
   end

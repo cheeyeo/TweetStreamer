@@ -15,7 +15,6 @@ defmodule TweetStreamer.TwitterFilter do
   end
 
   def handle_events(events, _from, :ok) do
-    Logger.debug("INSIDE HANDLE_EVENTS: #{inspect(events)}")
     events =
       events
       |> Enum.map(&filter_tweets/1)
@@ -23,10 +22,21 @@ defmodule TweetStreamer.TwitterFilter do
     {:noreply, events, :ok}
   end
 
-  defp filter_tweets({terms, tweet}) do
-    Logger.debug("INSIDE FILTER TWEETS: #{inspect(terms)}")
-    Logger.debug("INSIDE FILTER TWEETS: #{inspect(tweet)}")
+  def filter_tweets({terms, tweet}) do
+    Enum.map_reduce(terms, [], fn(term, acc) ->
+      map = if tweet.text =~ term do
+              Map.put_new(%{}, :term, term)
+              |> Map.put_new(:tweet, tweet)
+            end
 
-    {terms, tweet}
+      new_acc = case is_nil(map) do
+        false ->
+          acc ++ [map]
+        true ->
+          acc
+      end
+
+      {term, new_acc}
+    end)
   end
 end

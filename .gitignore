@@ -26,6 +26,6 @@ erl_crash.dump
 .env
 
 *.old
-CODE_BACKUP.ex
+CODE_BACKUP.md
 NOTES.md
 TODO.md
