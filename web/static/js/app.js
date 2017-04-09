@@ -41,4 +41,5 @@ searchInput.addEventListener("search", event => {
 }, false);
 
 
+import $ from "jquery";
 

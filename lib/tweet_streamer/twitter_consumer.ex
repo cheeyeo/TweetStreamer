@@ -19,8 +19,15 @@ defmodule TweetStreamer.TwitterConsumer do
 
   def print_events(event) do
     IO.puts "INSIDE CONSUMER print_events: #{inspect(event)}"
-    channel = event[:term]
-    tweet = event[:tweet]
+    channel = event.term
+    tweet = event.tweet
+
+    # Store channel into database
+    TweetStreamer.RepoHelpers.conditionally_store_channel(channel)
+    # Store tweet into database
+    TweetStreamer.RepoHelpers.conditionally_store_tweet(tweet)
+
+    # Broadcast the tweet to WS channel matching term
     TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: tweet})
   end
 end

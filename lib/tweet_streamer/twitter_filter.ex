@@ -31,7 +31,7 @@ defmodule TweetStreamer.TwitterFilter do
 
       new_acc = case is_nil(map) do
         false ->
-          acc ++ [map]
+          [map | acc]
         true ->
           acc
       end

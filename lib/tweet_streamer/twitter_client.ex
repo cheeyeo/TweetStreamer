@@ -13,7 +13,6 @@ defmodule TweetStreamer.TwitterClient do
 
       # Add it to queue which then calls filter to
       # match tweet to filter keyword
-
       Queue.put_in({terms, tweet})
     end)
   end

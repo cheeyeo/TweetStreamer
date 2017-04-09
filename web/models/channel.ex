@@ -3,7 +3,7 @@ defmodule TwitterPlayground.Channel do
 
   schema "channels" do
     field :name, :string
-
+    has_many :tweets, TwitterPlayground.Tweet
     timestamps()
   end
 

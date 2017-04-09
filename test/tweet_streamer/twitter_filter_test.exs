@@ -20,7 +20,7 @@ defmodule TweetStreamer.TwitterFilterTest do
 
       events = [{terms, tweet}]
       {:noreply, [{_, result}], :ok} = TwitterFilter.handle_events(events, self(), :ok)
-      assert [%{term: "apple", tweet: tweet}, %{term: "pears", tweet: tweet}] == result
+      assert [%{term: "pears", tweet: tweet}, %{term: "apple", tweet: tweet}] == result
     end
 
     test "map multiple interleaving matching terms to multiple tweets" do
