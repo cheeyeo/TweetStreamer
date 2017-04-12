@@ -5,6 +5,9 @@ defmodule TwitterPlayground.Tweet do
     field :username, :string
     field :text, :string
     field :id_str, :string
+    field :profile_image_url_https, :string
+    field :image_url, :string
+    field :source_url, :string
     field :created_at, Ecto.DateTime
     belongs_to :channel, TwitterPlayground.Channel
     timestamps()

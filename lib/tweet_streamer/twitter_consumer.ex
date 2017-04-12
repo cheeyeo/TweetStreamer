@@ -22,10 +22,7 @@ defmodule TweetStreamer.TwitterConsumer do
     channel = event.term
     tweet = event.tweet
 
-    # Store channel into database
-    TweetStreamer.RepoHelpers.conditionally_store_channel(channel)
-    # Store tweet into database
-    TweetStreamer.RepoHelpers.conditionally_store_tweet(tweet)
+    TweetStreamer.RepoHelpers.store_channel_and_tweet(channel, tweet)
 
     # Broadcast the tweet to WS channel matching term
     TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: tweet})

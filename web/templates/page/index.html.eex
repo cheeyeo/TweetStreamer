@@ -1,11 +1,26 @@
 <div class="row">
-  <div class="col-lg-12">
-    <div id='tweets'></div>
-    <div class="row">
-      <div class="col-md-6" id='tweets-apple'></div>
-      <div class="col-md-6" id='tweets-microsoft'></div>
-    </div>
+  <div class="col-lg-12" data-track='<%= @loaded_channel.name %>'>
+    <%= for tweet <- @loaded_channel.tweets do %>
+      <div id='tweet-<%= tweet.id_str %>' class='media'>
+        <div class='media-left'>
+          <a href='https://twitter.com/<%= tweet.username %>' target='_blank'>
+          <img src='<%= tweet.profile_image_url_https %>' class='media-object'/>
+          </a>
+        </div>
+        <div class='media-body'>
+          <h5 class='media-heading'><%= tweet.created_at %></h5>
+          <a href='https://twitter.com/<%= tweet.username%>/status/<%= tweet.id_str %>' target='_blank'>
+            <%= tweet.text %>
+          <div class="media">
+            <div class="media-left">
+              <a href='<%= tweet.source_url %>' target='_blank'>
+                <img src='<%= tweet.image_url %>' />
+              </a>
+            </div>
+          </div>
+          </a>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
-
-

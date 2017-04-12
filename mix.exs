@@ -18,7 +18,7 @@ defmodule TwitterPlayground.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TwitterPlayground, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :phoenix_ecto, :postgrex, :extwitter]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :phoenix_ecto, :postgrex, :extwitter, :timex]]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,7 +40,8 @@ defmodule TwitterPlayground.Mixfile do
        {:cowboy, "~> 1.0"},
        {:oauth, github: "tim/erlang-oauth"},
        {:extwitter, "~> 0.8.1"},
-       {:gen_stage, "~> 0.11"}
+       {:gen_stage, "~> 0.11"},
+       {:timex, "~> 3.0"}
      ]
   end
 
