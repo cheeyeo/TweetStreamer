@@ -18,13 +18,24 @@ defmodule TweetStreamer.TwitterConsumer do
   end
 
   def print_events(event) do
-    IO.puts "INSIDE CONSUMER print_events: #{inspect(event)}"
+    #IO.puts "INSIDE CONSUMER print_events: #{inspect(event)}"
     channel = event.term
     tweet = event.tweet
 
-    TweetStreamer.RepoHelpers.store_channel_and_tweet(channel, tweet)
+    {:ok, stored_tweet} = TweetStreamer.RepoHelpers.store_channel_and_tweet(channel, tweet)
+
+    payload = %{
+      "username" => stored_tweet.username,
+      "text" => stored_tweet.text,
+      "id_str" => stored_tweet.id_str,
+      "profile_image_url_https" => stored_tweet.profile_image_url_https,
+      "image_url" => stored_tweet.image_url,
+      "source_url" => stored_tweet.source_url,
+      "created_at" => stored_tweet.created_at
+    }
 
     # Broadcast the tweet to WS channel matching term
-    TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: tweet})
+    # To broacast stored_tweet we need to create a map with only the required fields matching the database record!
+    TwitterPlayground.Endpoint.broadcast!("tweets:"<>channel, "tweet", %{tweet: payload})
   end
 end

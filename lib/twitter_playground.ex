@@ -1,5 +1,6 @@
 defmodule TwitterPlayground do
   use Application
+  require Logger
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -12,14 +13,12 @@ defmodule TwitterPlayground do
       supervisor(TwitterPlayground.Repo, []),
       # Start the endpoint when the application starts
       supervisor(TwitterPlayground.Endpoint, []),
-      # Start your own worker by calling: TwitterPlayground.Worker.start_link(arg1, arg2, arg3)
-      # worker(TwitterPlayground.Worker, [arg1, arg2, arg3]),
-      supervisor(TweetStreamer.Supervisor, []),
       supervisor(TweetStreamer.TwitterClientSupervisor, []),
       worker(TweetStreamer.Queue, []),
       worker(TweetStreamer.TwitterFilter, []),
       worker(TweetStreamer.TwitterConsumer, []),
-      supervisor(Registry, [:unique, :extwitter_process])
+      supervisor(Registry, [:unique, :extwitter_process]),
+      worker(Task.Supervisor, [[name: StreamSupervisor, restart: :transient]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -28,20 +27,25 @@ defmodule TwitterPlayground do
     Supervisor.start_link(children, opts)
   end
 
-  def track(query) do
-    TweetStreamer.Server.add(query)
-  end
-
-  def untrack(query) do
-    TweetStreamer.Server.remove(query)
-  end
-
   def start_tracker() do
-    TweetStreamer.TwitterClientSupervisor.start_tracker()
+    children = Task.Supervisor.children(StreamSupervisor)
+    # We check the supervisor to see if it has started
+    # if not we create / start child process
+    unless Enum.any?(children) do
+      {:ok, _pid} = Task.Supervisor.start_child(StreamSupervisor, fn() ->
+        TweetStreamer.TwitterClient.stream
+        |> Stream.run
+      end)
+    end
   end
 
   def stop_tracker() do
-    TweetStreamer.TwitterClientSupervisor.stop_tracker()
+    children = Task.Supervisor.children(StreamSupervisor)
+    if Enum.any?(children) do
+      pid = List.first(children)
+      Task.Supervisor.terminate_child(StreamSupervisor, pid)
+    end
+    Logger.debug("AFTER CHILDREN: #{inspect(Task.Supervisor.children(OurSupervisor))}")
   end
 
   # Tell Phoenix to update the endpoint configuration

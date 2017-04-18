@@ -39,7 +39,7 @@ defmodule TwitterPlayground.Mixfile do
        {:gettext, "~> 0.11"},
        {:cowboy, "~> 1.0"},
        {:oauth, github: "tim/erlang-oauth"},
-       {:extwitter, "~> 0.8.1"},
+       {:extwitter, "~> 0.8.3"},
        {:gen_stage, "~> 0.11"},
        {:timex, "~> 3.0"}
      ]

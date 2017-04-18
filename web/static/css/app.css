@@ -109,3 +109,24 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+
+/* Images in media */
+.mx-auto{
+  margin-right: auto!important;
+  margin-left: auto!important;
+}
+
+.d-block{
+  display: block!important;
+}
+
+.constrain_50{
+  width: 50%;
+  height: 50%;
+}
+
+.img-container{
+  position:relative;
+  border: solid #f7f7f9;
+}

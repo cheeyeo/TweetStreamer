@@ -1,13 +1,32 @@
-<h2>Show channel</h2>
-
-<ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @channel.name %>
-  </li>
-
-</ul>
-
-<%= link "Edit", to: channel_path(@conn, :edit, @channel) %>
-<%= link "Back", to: channel_path(@conn, :index) %>
+<%= if @loaded_channel do %>
+<div class="row">
+  <div id="channel" class="col-lg-12" data-track='<%= @loaded_channel.name %>'>
+    <%= for tweet <- @loaded_channel.tweets do %>
+      <div id='tweet-<%= tweet.id_str %>' class='media'>
+        <div class='media-left'>
+          <a href='https://twitter.com/<%= tweet.username %>' target='_blank'>
+          <img src='<%= tweet.profile_image_url_https %>' class='media-object'/>
+          </a>
+        </div>
+        <div class='media-body'>
+          <h5 class='media-heading'><%= tweet.created_at %></h5>
+          <a href='https://twitter.com/<%= tweet.username%>/status/<%= tweet.id_str %>' target='_blank'>
+            <%= tweet.text %>
+          </a>
+          <%= if (tweet.source_url && tweet.image_url) do %>
+          <div class="media">
+            <div class="media-middle img-container">
+              <a href='<%= tweet.source_url %>' target='_blank'>
+                <img class="mx-auto d-block constrain_50" src='<%= tweet.image_url %>' />
+              </a>
+            </div>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<% else %>
+  <p>Please add a channel!</p>
+<% end %>

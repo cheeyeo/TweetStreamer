@@ -22,24 +22,25 @@ import "phoenix_html"
 // receiving a reply back using Phoenix.Channel.reply/2
 //import "./worker_test"
 
-
-// Below is the twitter streamer
-// a hardcoded query for 'apples' is set for now; still WIP
-// import "./twitter"
-
-import TwitterClient from "./twitter_client"
-
-let searchInput = document.getElementById("search-input");
-
-searchInput.addEventListener("search", event => {
-  console.log("inside search");
-  console.log(searchInput.value);
-
-  if(searchInput.value != ""){
-    new TwitterClient(searchInput.value).doSearch();
-  }
-}, false);
-
-
 import $ from "jquery";
+
+// import TwitterClient from "./twitter_client"
+
+// let searchInput = document.getElementById("search-input");
+
+// searchInput.addEventListener("search", event => {
+//   console.log("inside search");
+//   console.log(searchInput.value);
+
+//   if(searchInput.value != ""){
+//     new TwitterClient(searchInput.value).doSearch();
+//   }
+// }, false);
+
+import socket from "./socket";
+import TwitterClient2 from "./twitter_client2"
+
+let channel = document.getElementById("channel");
+
+TwitterClient2.init(socket, channel);
 

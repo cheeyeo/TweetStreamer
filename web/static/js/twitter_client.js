@@ -31,7 +31,6 @@ export default class TwitterClient{
         let tweet = obj.tweet;
         //console.log(tweet);
 
-        //let parent = document.querySelector('#tweets-' + this.query);
         let parent = document.querySelector('[data-track="#apple"]');
         let child = document.createElement('div');
 

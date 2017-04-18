@@ -21,7 +21,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">TwitterPlayground</a>
+          <a class="navbar-brand" href="/">TwitterPlayground</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -32,7 +32,7 @@
           </ul>
           <div class="navbar-form navbar-right">
             <div class="input-group">
-              <input id="search-input" type="search" class="form-control" placeholder="Enter a hashtag">
+              <input id="search-input" type="search" class="form-control" placeholder="Enter search term">
             </div>
           </div>
         </div>
@@ -43,9 +43,17 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+            <li class="">
+              <%= link "Create New Channel", to: channel_path(@conn, :new) %>
+            </li>
             <li class="active">
               <a href="#">Channels <span class="sr-only">(current)</span></a>
             </li>
+                <%= for c <- @channels_nav do %>
+                  <li>
+                    <%= link c.name, to: channel_path(@conn, :show, c.id) %>
+                  </li>
+                <% end %>
           </ul>
         </div>
 

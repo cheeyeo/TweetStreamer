@@ -1,12 +1,20 @@
 defmodule TweetStreamer.TwitterClient do
   require Logger
   alias TweetStreamer.Queue
+  alias TwitterPlayground.{Repo, Channel}
 
   def stream do
-    terms = TweetStreamer.Server.get_queries()
-    concated_terms = terms |> Enum.join(",")
+    terms =
+      Repo.all(Channel)
+      |> Enum.map(fn(c) -> c.name end)
 
-    ExTwitter.stream_filter(track: concated_terms)
+    concated_terms =
+      terms
+      |> Enum.join(",")
+
+    Logger.debug("TERMS: #{inspect(concated_terms)}")
+
+    ExTwitter.stream_filter(track: concated_terms, timeout: :infinity)
     |> Stream.each(fn(tweet) ->
       # Logger.info "zomg a tweet"
       # Logger.debug "#{inspect(tweet)}"

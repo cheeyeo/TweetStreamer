@@ -1,7 +1,21 @@
 defmodule TwitterPlayground.ChannelController do
   use TwitterPlayground.Web, :controller
 
-  alias TwitterPlayground.Channel
+  alias TwitterPlayground.{Channel, Tweet}
+
+  def show(conn, %{"id" => id}) do
+    tweets_query = from t in Tweet, order_by: t.created_at
+    query = from c in Channel,
+      preload: [tweets: ^tweets_query],
+      where: (c.id == ^id)
+
+    channel = Repo.one(query)
+
+    # starts the tracker if its not started ....
+    TwitterPlayground.start_tracker()
+
+    render(conn, "show.html", loaded_channel: channel)
+  end
 
   def index(conn, _params) do
     channels = Repo.all(Channel)
@@ -17,20 +31,17 @@ defmodule TwitterPlayground.ChannelController do
     changeset = Channel.changeset(%Channel{}, channel_params)
 
     case Repo.insert(changeset) do
-      {:ok, _channel} ->
+      {:ok, channel} ->
+        TwitterPlayground.stop_tracker()
+        TwitterPlayground.start_tracker()
+
         conn
         |> put_flash(:info, "Channel created successfully.")
-        |> redirect(to: channel_path(conn, :index))
+        |> redirect(to: channel_path(conn, :show, channel))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
-
-  def show(conn, %{"id" => id}) do
-    channel = Repo.get!(Channel, id)
-    render(conn, "show.html", channel: channel)
-  end
-
 
   def delete(conn, %{"id" => id}) do
     channel = Repo.get!(Channel, id)
