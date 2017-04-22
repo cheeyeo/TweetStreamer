@@ -28,10 +28,9 @@ defmodule TwitterPlayground do
   end
 
   def start_tracker() do
-    children = Task.Supervisor.children(StreamSupervisor)
     # We check the supervisor to see if it has started
     # if not we create / start child process
-    unless Enum.any?(children) do
+    unless tracker_running?(StreamSupervisor) do
       {:ok, _pid} = Task.Supervisor.start_child(StreamSupervisor, fn() ->
         TweetStreamer.TwitterClient.stream
         |> Stream.run
@@ -40,12 +39,16 @@ defmodule TwitterPlayground do
   end
 
   def stop_tracker() do
-    children = Task.Supervisor.children(StreamSupervisor)
-    if Enum.any?(children) do
-      pid = List.first(children)
+    if tracker_running?(StreamSupervisor) do
+      pid = Task.Supervisor.children(StreamSupervisor) |> hd
       Task.Supervisor.terminate_child(StreamSupervisor, pid)
     end
-    Logger.debug("AFTER CHILDREN: #{inspect(Task.Supervisor.children(OurSupervisor))}")
+    # Logger.debug("AFTER CHILDREN: #{inspect(Task.Supervisor.children(OurSupervisor))}")
+  end
+
+  def tracker_running?(supervisor) do
+    children = Task.Supervisor.children(supervisor)
+    Enum.any?(children)
   end
 
   # Tell Phoenix to update the endpoint configuration

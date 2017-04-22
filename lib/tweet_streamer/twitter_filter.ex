@@ -24,7 +24,7 @@ defmodule TweetStreamer.TwitterFilter do
 
   def filter_tweets({terms, tweet}) do
     Enum.map_reduce(terms, [], fn(term, acc) ->
-      map = if tweet.text =~ term do
+      map = if tweet.text =~ ~r/#{term}/i do
               Map.put_new(%{}, :term, term)
               |> Map.put_new(:tweet, tweet)
             end

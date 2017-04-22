@@ -12,6 +12,10 @@ defmodule TweetStreamer.Queue do
     GenStage.call(__MODULE__, {:put_in, term}, timeout)
   end
 
+  def clear(timeout \\ 5_000) do
+    GenStage.call(__MODULE__, :clear, timeout)
+  end
+
   # Server API
   def init([]) do
     {:producer, {:queue.new(), 0}, dispatcher: GenStage.BroadcastDispatcher}
@@ -19,6 +23,10 @@ defmodule TweetStreamer.Queue do
 
   def handle_call({:put_in, term}, from, {queue, demand}) do
     dispatch_events(:queue.in({from, term}, queue), demand, [])
+  end
+
+  def handle_call(:clear, _from, {_queue, demand}) do
+    {:reply, :ok, {:queue.new(), demand}}
   end
 
   def handle_demand(incoming_demand, {queue, demand}) do
