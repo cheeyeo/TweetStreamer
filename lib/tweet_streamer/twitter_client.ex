@@ -1,6 +1,6 @@
 defmodule TweetStreamer.TwitterClient do
   require Logger
-  alias TweetStreamer.Queue
+  alias TweetStreamer.{Queue, OauthCredentials}
   alias TwitterPlayground.{Repo, Channel}
 
   def stream do
@@ -13,6 +13,11 @@ defmodule TweetStreamer.TwitterClient do
       |> Enum.join(",")
 
     Logger.debug("TERMS: #{inspect(concated_terms)}")
+
+    creds = OauthCredentials.creds()
+    Logger.debug("CREDS: #{inspect(creds)}")
+
+    ExTwitter.configure(:process, creds)
 
     ExTwitter.stream_filter([track: concated_terms], :infinity)
     |> Stream.each(fn(tweet) ->

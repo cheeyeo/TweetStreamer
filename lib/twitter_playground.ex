@@ -18,7 +18,7 @@ defmodule TwitterPlayground do
       worker(TweetStreamer.TwitterConsumer, []),
       supervisor(Registry, [:unique, :extwitter_process]),
       worker(Task.Supervisor, [[name: StreamSupervisor, restart: :transient]]),
-      worker(TweetStreamer.OauthCredentials, [Numbers])
+      worker(TweetStreamer.OauthCredentials, [Application.get_env(:twitter_playground, :agent_name)])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

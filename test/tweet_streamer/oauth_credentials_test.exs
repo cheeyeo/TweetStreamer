@@ -21,18 +21,18 @@ defmodule TweetStreamer.OauthCredentialsTest do
   test "load alternate second set of secrets if the state is 0" do
     OauthCredentials.update_state(0)
 
-    assert %{consumer_key: 'test_key_2',
+    assert [consumer_key: 'test_key_2',
     consumer_secret: 'test_secret_2',
     access_token: 'test_token_2',
-    access_token_secret: 'test_token_secret_2'} == OauthCredentials.creds()
+    access_token_secret: 'test_token_secret_2'] == OauthCredentials.creds()
   end
 
   test "load alternate first set of secrets if the state is 1" do
     OauthCredentials.update_state(1)
 
-    assert %{consumer_key: 'test_key_1',
+    assert [consumer_key: 'test_key_1',
     consumer_secret: 'test_secret_1',
     access_token: 'test_token_1',
-    access_token_secret: 'test_token_secret_1'} == OauthCredentials.creds()
+    access_token_secret: 'test_token_secret_1'] == OauthCredentials.creds()
   end
 end

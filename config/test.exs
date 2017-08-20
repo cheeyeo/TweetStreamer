@@ -19,12 +19,16 @@ config :twitter_playground, TwitterPlayground.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :twitter_playground, :oauth, [
-  %{consumer_key: 'test_key_1',
+  [
+    consumer_key: 'test_key_1',
     consumer_secret: 'test_secret_1',
     access_token: 'test_token_1',
-    access_token_secret: 'test_token_secret_1'},
-  %{consumer_key: 'test_key_2',
+    access_token_secret: 'test_token_secret_1'
+  ],
+  [
+    consumer_key: 'test_key_2',
     consumer_secret: 'test_secret_2',
     access_token: 'test_token_2',
-    access_token_secret: 'test_token_secret_2'}
+    access_token_secret: 'test_token_secret_2'
+  ]
 ]

@@ -22,25 +22,21 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-
-config :extwitter, :oauth, [
-  consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
-  consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
-  access_token: System.get_env("TWITTER_ACCESS_TOKEN"),
-  access_token_secret: System.get_env("TWITTER_ACCESS_SECRET")
-]
+config :twitter_playground, :agent_name, CredentialId
 
 config :twitter_playground, :oauth, [
-  %{consumer_key: System.get_env("TWITTER_CONSUMER_KEY_1"),
+  [
+    consumer_key: System.get_env("TWITTER_CONSUMER_KEY_1"),
     consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET_1"),
     access_token: System.get_env("TWITTER_ACCESS_TOKEN_1"),
     access_token_secret: System.get_env("TWITTER_ACCESS_SECRET_1")
-    },
-  %{consumer_key: System.get_env("TWITTER_CONSUMER_KEY_2"),
+  ],
+  [
+    consumer_key: System.get_env("TWITTER_CONSUMER_KEY_2"),
     consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET_2"),
     access_token: System.get_env("TWITTER_ACCESS_TOKEN_2"),
     access_token_secret: System.get_env("TWITTER_ACCESS_SECRET_2")
-    }
+  ]
 ]
 
 # Import environment specific config. This must remain at the bottom

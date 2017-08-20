@@ -1,17 +1,18 @@
 defmodule TweetStreamer.OauthCredentials do
   @creds Application.get_env(:twitter_playground, :oauth)
+  @agent Application.get_env(:twitter_playground, :agent_name)
 
-  def start_link(name) do
-    Agent.start_link(fn -> 0 end, name: name)
+  def start_link(_name) do
+    Agent.start_link(fn -> 0 end, name: @agent)
   end
 
   def update_state(num) do
-    update = if(num < 1, do: 1, else: 0)
-    Agent.update(Numbers, fn(_state) -> update end)
+    new_state = if(num < 1, do: 1, else: 0)
+    Agent.update(@agent, fn(_state) -> new_state end)
   end
 
   def current_state() do
-    Agent.get(Numbers, &(&1))
+    Agent.get(@agent, &(&1))
   end
 
   # Load random creds from list above
