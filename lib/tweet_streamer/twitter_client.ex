@@ -17,7 +17,7 @@ defmodule TweetStreamer.TwitterClient do
     ExTwitter.stream_filter([track: concated_terms], :infinity)
     |> Stream.each(fn(tweet) ->
       # Logger.info "zomg a tweet"
-      Logger.debug "#{inspect(tweet)}"
+      # Logger.debug "#{inspect(tweet)}"
 
       # Add it to queue which then calls filter to
       # match tweet to filter keyword

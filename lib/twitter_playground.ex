@@ -13,12 +13,12 @@ defmodule TwitterPlayground do
       supervisor(TwitterPlayground.Repo, []),
       # Start the endpoint when the application starts
       supervisor(TwitterPlayground.Endpoint, []),
-      supervisor(TweetStreamer.TwitterClientSupervisor, []),
       worker(TweetStreamer.Queue, []),
       worker(TweetStreamer.TwitterFilter, []),
       worker(TweetStreamer.TwitterConsumer, []),
       supervisor(Registry, [:unique, :extwitter_process]),
-      worker(Task.Supervisor, [[name: StreamSupervisor, restart: :transient]])
+      worker(Task.Supervisor, [[name: StreamSupervisor, restart: :transient]]),
+      worker(TweetStreamer.OauthCredentials, [Numbers])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -43,7 +43,7 @@ defmodule TwitterPlayground do
       pid = Task.Supervisor.children(StreamSupervisor) |> hd
       Task.Supervisor.terminate_child(StreamSupervisor, pid)
     end
-    # Logger.debug("AFTER CHILDREN: #{inspect(Task.Supervisor.children(OurSupervisor))}")
+    # Logger.debug("AFTER CHILDREN: #{inspect(Task.Supervisor.children(StreamSupervisor))}")
   end
 
   def tracker_running?(supervisor) do

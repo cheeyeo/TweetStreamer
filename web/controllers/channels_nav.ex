@@ -1,4 +1,4 @@
-# Plug to render channels on right hand side
+# Plug to render channels on left hand side
 defmodule TwitterPlayground.ChannelsNav do
   import Plug.Conn
   import Ecto.Query

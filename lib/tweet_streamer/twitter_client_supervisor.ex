@@ -3,7 +3,7 @@ defmodule TweetStreamer.TwitterClientSupervisor do
   @name TwitterClientSupervisor
   require Logger
 
-  def start_link do
+  def start_link() do
     Supervisor.start_link(__MODULE__, [], name: @name)
   end
 
